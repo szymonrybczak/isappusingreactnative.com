@@ -21,6 +21,7 @@ export function ListItem({
   downloadApp,
   unzipApp,
   checkApp,
+  removeArtifacts,
 }: {
   appId: string;
   icon: string;
@@ -32,6 +33,7 @@ export function ListItem({
   }>;
   unzipApp: (title: string, isTwoUnzipsRequired: boolean) => Promise<void>;
   checkApp: (title: string, appId: string) => Promise<boolean>;
+  removeArtifacts: (title: string) => Promise<void>;
 }) {
   const [showDetails, setShowDetails] = useState(false);
   const [isReactNative, setIsReactNative] = useState<boolean | null>(null);
@@ -63,6 +65,8 @@ export function ListItem({
       }
       
       setStatus(AnalyzeStatus.Error);
+    } finally {
+      removeArtifacts(title);
     }
   };
 

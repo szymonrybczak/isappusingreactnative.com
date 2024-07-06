@@ -9,6 +9,7 @@ import { ListItem } from "./ListItem";
 import checkApp from "@/actions/checkApp";
 import downloadApp from "@/actions/downloadApp";
 import unzipApp from "@/actions/unzipApp";
+import removeArtifacts from "@/actions/removeArtifacts";
 
 export async function List({ term }: { term: string }) {
   const apps = await scraper.search({ term, num: 3 });
@@ -49,6 +50,7 @@ export async function List({ term }: { term: string }) {
             downloadApp={downloadApp}
             unzipApp={unzipApp}
             checkApp={checkApp}
+            removeArtifacts={removeArtifacts}
           />
         ))}
       </ul>
