@@ -27,12 +27,12 @@ const downloadApp = async (appName: string, appId: string) => {
     const totalSize = response.headers.get("content-length");
 
     if (!response.ok) {
-      throw new Error(`Unexpected response ${response.statusText}`);
+      throw new Error(`An error occurred while download the app, probably the app is not available in the registry 😢`);
     }
 
     console.log({ totalSize }); // TODO: move probably to another function and present how much data needs to be downloaded, in the best scenario we should stream updates :)
 
-    const downloadPath = getDownloadPath(appName);
+    const downloadPath = getDownloadPath(appId);
     fs.mkdirSync(dirname(downloadPath), { recursive: true });
 
     // @ts-ignore

@@ -3,7 +3,7 @@
 import unzipper from "unzipper";
 import fs from "fs";
 import { getDownloadPath } from "./utils";
-import path, { dirname } from "path";
+import path, { dirname, join } from "path";
 import fg from "fast-glob";
 
 const uznip = async (path: string, extractPath: string) => {
@@ -20,16 +20,12 @@ const uznip = async (path: string, extractPath: string) => {
   } catch {}
 };
 
-const unzipApp = async (
-  appName: string,
-  isSecondUnzipRequired: boolean
-) => {
+const unzipApp = async (appId: string, isSecondUnzipRequired: boolean) => {
   try {
-    const downloadPath = getDownloadPath(appName);
+    const downloadPath = getDownloadPath(appId);
     const downloadDirectory = dirname(downloadPath);
 
     await uznip(downloadPath, downloadDirectory);
-
     if (isSecondUnzipRequired) {
       const xapkFile = await fg(["**/*.apk"], {
         cwd: downloadDirectory,

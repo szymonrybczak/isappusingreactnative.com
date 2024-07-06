@@ -47,7 +47,7 @@ export function ListItem({
       const { isTwoUnzipsRequired } = await downloadApp(title, appId);
 
       setStatus(AnalyzeStatus.Unzipping);
-      await unzipApp(title, isTwoUnzipsRequired);
+      await unzipApp(appId, isTwoUnzipsRequired);
 
       setStatus(AnalyzeStatus.Analyzing);
       const result = await checkApp(title, appId);

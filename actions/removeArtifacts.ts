@@ -1,6 +1,5 @@
 "use server";
 
-import fg from "fast-glob";
 import { getDownloadPath } from "./utils";
 import { dirname } from "path";
 import { rmSync } from "fs";

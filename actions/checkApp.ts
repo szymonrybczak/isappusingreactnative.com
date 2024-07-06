@@ -11,10 +11,10 @@ const checkApp = async (appName: string, appId: string): Promise<boolean> => {
     "**/*react?([^a-zA-Z])native*"
   ];
 
-  console.log(dirname(getDownloadPath(appName)))
+  console.log(dirname(getDownloadPath(appId)))
 
   const entries = await fg(globPatterns, {
-    cwd: dirname(getDownloadPath(appName)),
+    cwd: dirname(getDownloadPath(appId)),
   });
 
   console.log(entries);
