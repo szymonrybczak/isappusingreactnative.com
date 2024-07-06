@@ -8,10 +8,7 @@ const checkApp = async (appName: string, appId: string): Promise<boolean> => {
 
   const globPatterns = [
     "**/*react?(-)navigation*",
-    "**/*react*",
-    "**/*react?(-)native*",
-    "!**/*reactive*",
-    "!**/*reactions*"
+    "**/*react?([^a-zA-Z])native*"
   ];
 
   console.log(dirname(getDownloadPath(appName)))
