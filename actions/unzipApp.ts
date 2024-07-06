@@ -25,7 +25,8 @@ const unzipApp = async (appId: string, isSecondUnzipRequired: boolean) => {
       const xapkPath = path.join(downloadDirectory, xapkFile[0]);
       await uznip(xapkPath, downloadDirectory);
     }
-  } catch {
+  } catch(e) {
+    console.error(e)
     throw new Error("An error occurred while unzipping the app.");
   }
 };

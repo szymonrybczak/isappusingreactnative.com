@@ -1,5 +1,6 @@
 "use client";
 
+import { AppDetails } from "@/types/AppDetails";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -18,30 +19,61 @@ export function ListItem({
   title,
   scoreText,
   developer,
+  categories,
+  url,
+  description,
+  installs,
   downloadApp,
   unzipApp,
   checkApp,
   removeArtifacts,
+  saveResult,
+  isReactNative: fetchIsReactNative, // FIXME lol
 }: {
   appId: string;
   icon: string;
   title: string;
   scoreText: string;
   developer: string;
-  downloadApp: (title: string, appId: string) => Promise<{
+  categories: Array<{
+    name: string;
+    id: string | null;
+  }>;
+  url: string;
+  description: string;
+  installs: number;
+  downloadApp: (
+    title: string,
+    appId: string
+  ) => Promise<{
     isTwoUnzipsRequired: boolean;
   }>;
   unzipApp: (title: string, isTwoUnzipsRequired: boolean) => Promise<void>;
-  checkApp: (title: string, appId: string) => Promise<boolean>;
+  checkApp: (title: string, appId: string) => Promise<string[]>;
   removeArtifacts: (title: string) => Promise<void>;
+  saveResult: (details: AppDetails, result: boolean) => Promise<void>;
+  isReactNative: boolean | null;
 }) {
+  console.log({
+    appId,
+    fetchIsReactNative,
+  });
   const [showDetails, setShowDetails] = useState(false);
-  const [isReactNative, setIsReactNative] = useState<boolean | null>(null);
-  const [status, setStatus] = useState<AnalyzeStatus | null>(null);
+  const [isReactNative, setIsReactNative] = useState<boolean | null>(
+    fetchIsReactNative
+  );
+  const [status, setStatus] = useState<AnalyzeStatus | null>(isReactNative ? AnalyzeStatus.Success : AnalyzeStatus.Idle);
   const [error, setError] = useState<Error | null>(null);
 
   const handleClick = async () => {
     setShowDetails((prev) => !prev);
+
+
+
+    if (isReactNative === true) {
+      return;
+    }
+
     try {
       setStatus(AnalyzeStatus.Downloading);
       const { isTwoUnzipsRequired } = await downloadApp(title, appId);
@@ -52,22 +84,36 @@ export function ListItem({
       setStatus(AnalyzeStatus.Analyzing);
       const result = await checkApp(title, appId);
 
-      setIsReactNative(result);
+      setIsReactNative(result.length > 0);
       setStatus(AnalyzeStatus.Success);
 
-      if (result) {
-        // saveResult(title, appId, data, result); // TODO: save the result to the database
-      }
+      const data: AppDetails = {
+        appId,
+        icon,
+        title,
+        url,
+        developer,
+        scoreText,
+        description,
+        installs,
+        categories,
+        analyzeResult: result,
+      };
 
+      if (result) {
+        await saveResult(data, result.length > 0);
+      }
     } catch (err) {
       if (err instanceof Error) {
         setError(err);
       }
-      
+
       setStatus(AnalyzeStatus.Error);
     } finally {
       removeArtifacts(title);
     }
+
+    // FIXME add some fancy animation when app using React Native!
   };
 
   return (
@@ -125,19 +171,18 @@ export function ListItem({
               {status === AnalyzeStatus.Unzipping && "Unzipping..."}
               {status === AnalyzeStatus.Analyzing && "Analyzing..."}
               {status === AnalyzeStatus.Error && error && error.message}
-              {status === AnalyzeStatus.Success && isReactNative === null && (
-                "Unknown"
-              )}
+              {status === AnalyzeStatus.Success &&
+                isReactNative === null &&
+                "Unknown"}
               {status === AnalyzeStatus.Success && isReactNative === true && (
                 <>
                   <span>React Native</span>
                   <ReactLogo className="ml-2" />
                 </>
               )}
-              {status === AnalyzeStatus.Success && isReactNative === false && (
-                "Not React Native"
-              )}
-              
+              {status === AnalyzeStatus.Success &&
+                isReactNative === false &&
+                "Not React Native"}
             </p>
           </div>
         </div>

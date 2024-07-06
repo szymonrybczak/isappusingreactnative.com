@@ -3,7 +3,7 @@ import { getDownloadPath } from "./utils";
 import { dirname } from "path";
 
 
-const checkApp = async (appName: string, appId: string): Promise<boolean> => {
+const checkApp = async (appName: string, appId: string): Promise<string[]> => {
   "use server";
 
   const globPatterns = [
@@ -22,7 +22,7 @@ const checkApp = async (appName: string, appId: string): Promise<boolean> => {
   // TODO: grep in scenario of brownfield app
   // TODO: check for the libraries that are presented in the app binary
 
-  return entries.length > 0;
+  return entries
 };
 
 export default checkApp;

@@ -11,6 +11,7 @@ export default function Page({
     search: string;
   };
 }) {
+  
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-6">
       <h1 className="text-3xl font font-semibold mb-4">Is app using React Native?</h1>

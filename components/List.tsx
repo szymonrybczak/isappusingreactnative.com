@@ -10,9 +10,24 @@ import checkApp from "@/actions/checkApp";
 import downloadApp from "@/actions/downloadApp";
 import unzipApp from "@/actions/unzipApp";
 import removeArtifacts from "@/actions/removeArtifacts";
+import saveResult from "@/actions/saveResult";
+import { sql } from "@vercel/postgres";
 
 export async function List({ term }: { term: string }) {
-  const apps = await scraper.search({ term, num: 3 });
+  const apps = await scraper.search({ term, num: 3, fullDetail: true});
+
+  const appIds = apps.map(({ appId }) => appId);
+
+  const query = await sql`
+    SELECT is_react_native, app_id
+    FROM results
+    WHERE app_id IN (${appIds[0]}, ${appIds[1]}, ${appIds[2]})
+  `;
+
+  const appsWithReactNative = query.rows.map(({ app_id, is_react_native }) => {
+    return { id: app_id, isReactNative: is_react_native };
+  });
+
 
   if (!apps.length) {
     return (
@@ -39,7 +54,7 @@ export async function List({ term }: { term: string }) {
   return (
     <div className="w-full max-w-3xl px-4">
       <ul className="grid grid-cols-1 gap-4">
-        {apps.map(({ appId, title, icon, scoreText, developer }) => (
+        {apps.map(({ appId, title, icon, scoreText, categories, url, developer, description, maxInstalls }) => (
           <ListItem
             key={appId}
             appId={appId}
@@ -51,6 +66,12 @@ export async function List({ term }: { term: string }) {
             unzipApp={unzipApp}
             checkApp={checkApp}
             removeArtifacts={removeArtifacts}
+            saveResult={saveResult}
+            categories={categories}
+            url={url}
+            description={description}
+            installs={maxInstalls}
+            isReactNative={appsWithReactNative.find(({ id }) => id === appId)?.isReactNative} 
           />
         ))}
       </ul>

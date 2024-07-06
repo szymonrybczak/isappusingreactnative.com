@@ -9,6 +9,11 @@ import { dirname } from "path";
 
 const pipe = util.promisify(pipeline);
 
+const bytesToMegabytes = (bytes: number, decimals = 2) => {
+  return (bytes / (1024 * 1024)).toFixed(decimals);
+}
+
+
 const downloadApp = async (appName: string, appId: string) => {
   try {
     const data = await fetch(
@@ -26,11 +31,12 @@ const downloadApp = async (appName: string, appId: string) => {
 
     const totalSize = response.headers.get("content-length");
 
-    if (!response.ok) {
+    if (!response.ok || !totalSize) {
       throw new Error(`An error occurred while download the app, probably the app is not available in the registry 😢`);
     }
 
-    console.log({ totalSize }); // TODO: move probably to another function and present how much data needs to be downloaded, in the best scenario we should stream updates :)
+    console.log({ mb: bytesToMegabytes(parseInt(totalSize)) });
+    // TODO: move probably to another function and present how much data needs to be downloaded, in the best scenario we should stream updates :)
 
     const downloadPath = getDownloadPath(appId);
     fs.mkdirSync(dirname(downloadPath), { recursive: true });
