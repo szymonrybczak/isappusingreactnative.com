@@ -1,23 +1,13 @@
 "use server";
 
-import unzipper from "unzipper";
-import fs from "fs";
 import { getDownloadPath } from "./utils";
-import path, { dirname, join } from "path";
+import path, { dirname } from "path";
 import fg from "fast-glob";
+import AdmZip from "adm-zip";
 
-const uznip = async (path: string, extractPath: string) => {
-  const directory = unzipper.Extract({ path: extractPath });
-
-  try {
-    await fs
-      .createReadStream(path)
-      .pipe(directory)
-      .on("entry", (entry) => {
-        entry.autodrain().on("error", (error: Error) => console.log(error));
-      })
-      .promise();
-  } catch {}
+const uznip = (path: string, extractPath: string) => {
+  const zip = new AdmZip(path);
+  zip.extractAllTo(extractPath, true);
 };
 
 const unzipApp = async (appId: string, isSecondUnzipRequired: boolean) => {
@@ -25,7 +15,8 @@ const unzipApp = async (appId: string, isSecondUnzipRequired: boolean) => {
     const downloadPath = getDownloadPath(appId);
     const downloadDirectory = dirname(downloadPath);
 
-    await uznip(downloadPath, downloadDirectory);
+    uznip(downloadPath, downloadDirectory);
+
     if (isSecondUnzipRequired) {
       const xapkFile = await fg(["**/*.apk"], {
         cwd: downloadDirectory,
