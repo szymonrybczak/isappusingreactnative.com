@@ -2,7 +2,7 @@ import { List } from "@/components/List";
 import { Search } from "@/components/search";
 import Link from "next/link";
 
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 export default function Page({
   searchParams,
