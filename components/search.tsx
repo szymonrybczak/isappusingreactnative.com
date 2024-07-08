@@ -22,17 +22,17 @@ export function Search() {
   }, 200);
 
   return (
-    <div className="max-w-md w-full">
+    <div className="w-full max-w-md px-4 sm:px-0">
       <div className="flex items-center bg-white rounded-lg shadow-md dark:bg-gray-800">
         <input
-          className="flex-1 px-4 py-2 text-gray-700 bg-transparent border-none outline-none dark:text-gray-300"
+          className="flex-1 px-3 py-2 text-sm sm:text-base text-gray-700 bg-transparent border-none outline-none dark:text-gray-300"
           placeholder="Search apps..."
           onChange={(e) => handleSearch(e.target.value)}
           defaultValue={searchParams.get("search")?.toString() ?? ""}
           type="text"
         />
-        <button className="px-4 py-2 text-white bg-gray-800 rounded-r-lg hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500">
-          <SearchIcon className="w-5 h-5" />
+        <button className="px-3 py-2 text-white bg-gray-800 rounded-r-lg hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500">
+          <SearchIcon className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
     </div>

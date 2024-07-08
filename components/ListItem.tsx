@@ -123,7 +123,7 @@ export function ListItem({
       key={appId}
       className={`rounded-lg shadow-md overflow-hidden flex flex-col transition-colors duration-200 ${
         showDetails
-          ? "bg-gray-100 dark:bg-blue-900"
+          ? "bg-gray-100 dark:bg-gray-800"
           : "bg-white dark:bg-gray-800"
       }`}
       onClick={handleClick}
