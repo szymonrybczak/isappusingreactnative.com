@@ -5,9 +5,9 @@ import { dirname } from "path";
 import { rmSync } from "fs";
 
 
-const removeArtifacts = async (appName: string) => {
+const removeArtifacts = async (appId: string) => {
   try {
-    rmSync(dirname(getDownloadPath(appName)), { recursive: true, force: true });
+    rmSync(dirname(getDownloadPath(appId)), { recursive: true, force: true });
   } catch {
     console.error('Failed to remove artifacts')
   }

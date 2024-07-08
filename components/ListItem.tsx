@@ -112,7 +112,7 @@ export function ListItem({
 
       setStatus(AnalyzeStatus.Error);
     } finally {
-      removeArtifacts(title);
+      removeArtifacts(appId);
     }
 
     // FIXME add some fancy animation when app using React Native!
