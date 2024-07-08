@@ -43,12 +43,12 @@ export default function Page({
       <div className="flex items-center justify-between w-full max-w-3xl px-4 mt-6">
         <p className="text-gray-500 dark:text-gray-400">
           Created by{" "}
-          <a
+          <Link
             href="https://twitter.com/szymonrybczak"
             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 underline underline-offset-2"
           >
             Szymon Rybczak
-          </a>
+          </Link>
         </p>
         <Link
           href="https://github.com/szymonrybczak/isappusingreactnative.com"
