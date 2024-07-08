@@ -6,18 +6,15 @@
 
 import scraper from "google-play-scraper";
 import { ListItem } from "./ListItem";
-import checkApp from "@/actions/checkApp";
-import downloadApp from "@/actions/downloadApp";
-import unzipApp from "@/actions/unzipApp";
-import removeArtifacts from "@/actions/removeArtifacts";
-import saveResult from "@/actions/saveResult";
 import { sql } from "@vercel/postgres";
+import { unstable_noStore as noStore } from 'next/cache';
 
 export async function List({ term }: { term: string }) {
   const apps = await scraper.search({ term, num: 3, fullDetail: true});
 
   const appIds = apps.map(({ appId }) => appId);
 
+  noStore();
   const query = await sql`
     SELECT is_react_native, app_id
     FROM results
@@ -27,7 +24,6 @@ export async function List({ term }: { term: string }) {
   const appsWithReactNative = query.rows.map(({ app_id, is_react_native }) => {
     return { id: app_id, isReactNative: is_react_native };
   });
-
 
   if (!apps.length) {
     return (
@@ -62,16 +58,11 @@ export async function List({ term }: { term: string }) {
             icon={icon}
             scoreText={scoreText}
             developer={developer}
-            downloadApp={downloadApp}
-            unzipApp={unzipApp}
-            checkApp={checkApp}
-            removeArtifacts={removeArtifacts}
-            saveResult={saveResult}
             categories={categories}
             url={url}
             description={description}
             installs={maxInstalls}
-            isReactNative={appsWithReactNative.find(({ id }) => id === appId)?.isReactNative} 
+            isReactNative={appsWithReactNative.find(({ id }) => id === appId)?.isReactNative ?? null} 
           />
         ))}
       </ul>

@@ -1,11 +1,11 @@
+"use server";
+
 import fg from "fast-glob";
 import { getDownloadPath } from "./utils";
 import { dirname } from "path";
 
 
 const checkApp = async (appName: string, appId: string): Promise<string[]> => {
-  "use server";
-
   const globPatterns = [
     "**/*react?(-)navigation*",
     "**/*react?([^a-zA-Z])native*"

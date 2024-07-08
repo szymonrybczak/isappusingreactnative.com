@@ -1,11 +1,18 @@
 "use client";
 
+import checkApp from "@/actions/checkApp";
+import downloadApp from "@/actions/downloadApp";
+import getApp from "@/actions/getApp";
+import removeArtifacts from "@/actions/removeArtifacts";
+import saveResult from "@/actions/saveResult";
+import unzipApp from "@/actions/unzipApp";
 import { AppDetails } from "@/types/AppDetails";
 import Image from "next/image";
 import { useState } from "react";
 
 enum AnalyzeStatus {
   Idle,
+  CheckingAppAvailability,
   Downloading,
   Unzipping,
   Analyzing,
@@ -23,12 +30,7 @@ export function ListItem({
   url,
   description,
   installs,
-  downloadApp,
-  unzipApp,
-  checkApp,
-  removeArtifacts,
-  saveResult,
-  isReactNative: fetchIsReactNative, // FIXME lol
+  isReactNative: fetchIsReactNative
 }: {
   appId: string;
   icon: string;
@@ -42,41 +44,41 @@ export function ListItem({
   url: string;
   description: string;
   installs: number;
-  downloadApp: (
-    title: string,
-    appId: string
-  ) => Promise<{
-    isTwoUnzipsRequired: boolean;
-  }>;
-  unzipApp: (title: string, isTwoUnzipsRequired: boolean) => Promise<void>;
-  checkApp: (title: string, appId: string) => Promise<string[]>;
-  removeArtifacts: (title: string) => Promise<void>;
-  saveResult: (details: AppDetails, result: boolean) => Promise<void>;
   isReactNative: boolean | null;
 }) {
-  console.log({
-    appId,
-    fetchIsReactNative,
-  });
   const [showDetails, setShowDetails] = useState(false);
   const [isReactNative, setIsReactNative] = useState<boolean | null>(
     fetchIsReactNative
   );
-  const [status, setStatus] = useState<AnalyzeStatus | null>(isReactNative ? AnalyzeStatus.Success : AnalyzeStatus.Idle);
+  const [status, setStatus] = useState<AnalyzeStatus | null>(
+    fetchIsReactNative !== null ? AnalyzeStatus.Success : AnalyzeStatus.Idle
+  );
+  const [appSize, setAppSize] = useState<string | null>(null);
   const [error, setError] = useState<Error | null>(null);
 
   const handleClick = async () => {
     setShowDetails((prev) => !prev);
 
-
-
-    if (isReactNative === true) {
+    if (fetchIsReactNative !== null) {
       return;
     }
 
     try {
-      setStatus(AnalyzeStatus.Downloading);
-      const { isTwoUnzipsRequired } = await downloadApp(title, appId);
+      setStatus(AnalyzeStatus.CheckingAppAvailability);
+      const app = await getApp(title, appId);
+
+      if (!app) {
+        throw new Error(
+          "An error occurred while download the app, probably the app is not available in the registry 😢"
+        ); 
+      }
+
+      const { link, size } = app;
+
+      setStatus(AnalyzeStatus.Downloading)
+      setAppSize(size);
+
+      const { isTwoUnzipsRequired } = await downloadApp(link, appId);
 
       setStatus(AnalyzeStatus.Unzipping);
       await unzipApp(appId, isTwoUnzipsRequired);
@@ -166,10 +168,12 @@ export function ListItem({
           <div className="flex flex-col">
             <p className="flex items-center text-l text-gray-700 dark:text-gray-300 mb-2">
               <strong className="mr-2">Technology:</strong>
-              {status === AnalyzeStatus.Idle && "Analyzing..."}
-              {status === AnalyzeStatus.Downloading && "Downloading..."}
-              {status === AnalyzeStatus.Unzipping && "Unzipping..."}
-              {status === AnalyzeStatus.Analyzing && "Analyzing..."}
+              {status === AnalyzeStatus.CheckingAppAvailability && "Checking app availability..."}
+              {status === AnalyzeStatus.Downloading && (
+                <>Downloading app binary... {appSize && `(${appSize} MB)`}</>
+              )}
+              {status === AnalyzeStatus.Unzipping && "Unzipping app..."}
+              {status === AnalyzeStatus.Analyzing && "Analyzing app code..."}
               {status === AnalyzeStatus.Error && error && error.message}
               {status === AnalyzeStatus.Success &&
                 isReactNative === null &&
@@ -182,7 +186,7 @@ export function ListItem({
               )}
               {status === AnalyzeStatus.Success &&
                 isReactNative === false &&
-                "Not React Native"}
+                "Not React Native :("}
             </p>
           </div>
         </div>
