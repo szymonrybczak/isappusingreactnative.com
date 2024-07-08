@@ -21,7 +21,7 @@ export async function List({ term }: { term: string }) {
     WHERE app_id IN (${appIds[0]}, ${appIds[1]}, ${appIds[2]})
   `;
 
-  const appsWithReactNative = query.rows.map(({ app_id, is_react_native }) => {
+  const checkApps = query.rows.map(({ app_id, is_react_native }) => {
     return { id: app_id, isReactNative: is_react_native };
   });
 
@@ -62,7 +62,7 @@ export async function List({ term }: { term: string }) {
             url={url}
             description={description}
             installs={maxInstalls}
-            isReactNative={appsWithReactNative.find(({ id }) => id === appId)?.isReactNative ?? null} 
+            isReactNative={checkApps.find(({ id }) => id === appId)?.isReactNative ?? null} 
           />
         ))}
       </ul>
