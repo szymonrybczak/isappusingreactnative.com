@@ -30,7 +30,7 @@ export default function Page({
           >
             <ReactLogo className="w-12 h-12" />
             <h3 className="mt-4 text-xl font-bold text-gray-800 dark:text-gray-200">
-              Do you ever wondered if an app is using React Native?
+              Have you ever wondered if an app is using React Native?
             </h3>
             <p className="mt-2 text-gray-600 dark:text-gray-400 text-center">
               You can search for any app to find out if it{"'"}s using React Native.
