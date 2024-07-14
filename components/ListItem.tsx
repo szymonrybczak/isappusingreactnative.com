@@ -69,9 +69,18 @@ export function ListItem({
       const app = await getApp(title, appId);
 
       if (!app) {
-        throw new Error(
-          "An error occurred while download the app, probably the app is not available in the registry 😢"
-        ); 
+        const financeAppError = categories[0].id === "FINANCE";
+
+        let errorMessage =
+          "An error occurred while downloading the app, probably the app is not available in the registry 😢";
+
+        if (financeAppError) {
+          errorMessage =
+            "Finance App Warning: This app is not supported in our registry. " +
+            "Due to security concerns, not all finance apps are included :(";
+        }
+
+        throw new Error(errorMessage);
       }
 
       const { link, size } = app;
