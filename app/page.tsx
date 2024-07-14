@@ -2,8 +2,28 @@ import ReactLogo from "@/components/icons/React";
 import { List } from "@/components/List";
 import { Search } from "@/components/search";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export const maxDuration = 180;
+
+const Fallback = (
+  <div className="w-full max-w-3xl px-4">
+    <ul className="grid grid-cols-1 gap-4" />
+    <div
+      className={`bg-white rounded-lg shadow-md dark:bg-gray-800 p-8 flex flex-col items-center justify-center ${
+        false ? "hidden" : "flex"
+      }`}
+    >
+      <ReactLogo className="w-12 h-12" />
+      <h3 className="mt-4 text-xl font-bold text-gray-800 dark:text-gray-200 text-center">
+        Loading...
+      </h3>
+      <p className="mt-2 text-gray-600 dark:text-gray-400 text-center text-s">
+        Please wait while we fetch the data.
+      </p>
+    </div>
+  </div>
+);
 
 export default function Page({
   searchParams,
@@ -18,27 +38,31 @@ export default function Page({
         Is app using React Native?
       </h1>
       <Search />
-      {searchParams?.search ? (
-        <List term={searchParams?.search} />
-      ) : (
-        <div className="w-full max-w-3xl px-4">
-          <ul className="grid grid-cols-1 gap-4" />
-          <div
-            className={`bg-white rounded-lg shadow-md dark:bg-gray-800 p-8 flex flex-col items-center justify-center ${
-              false ? "hidden" : "flex"
-            }`}
-          >
-            <ReactLogo className="w-12 h-12" />
-            <h3 className="mt-4 text-xl font-bold text-gray-800 dark:text-gray-200 text-center">
-              Have you ever wondered if an app is using React Native?
-            </h3>
-            <p className="mt-2 text-gray-600 dark:text-gray-400 text-center text-s">
-              You can search for any app to find out if it{"'"}s using React Native.
-            </p>
+      <Suspense fallback={Fallback} key={searchParams?.search}>
+      
+        {searchParams?.search ? (
+          <List term={searchParams?.search} />
+        ) : (
+          <div className="w-full max-w-3xl px-4">
+            <ul className="grid grid-cols-1 gap-4" />
+            <div
+              className={`bg-white rounded-lg shadow-md dark:bg-gray-800 p-8 flex flex-col items-center justify-center ${
+                false ? "hidden" : "flex"
+              }`}
+            >
+              <ReactLogo className="w-12 h-12" />
+              <h3 className="mt-4 text-xl font-bold text-gray-800 dark:text-gray-200 text-center">
+                Have you ever wondered if an app is using React Native?
+              </h3>
+              <p className="mt-2 text-gray-600 dark:text-gray-400 text-center text-s">
+                You can search for any app to find out if it{"'"}s using React Native.
+              </p>
+            </div>
           </div>
-        </div>
 
-      )}
+        )}
+
+      </Suspense>
 
       <div className="flex items-center justify-between w-full max-w-3xl px-4 mt-6">
         <p className="text-gray-500 dark:text-gray-400">
