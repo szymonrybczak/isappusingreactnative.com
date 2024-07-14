@@ -32,6 +32,8 @@ export function ListItem({
   description,
   installs,
   isReactNative: fetchIsReactNative,
+  isActive,
+  onActivate,
 }: {
   appId: string;
   icon: string;
@@ -46,8 +48,9 @@ export function ListItem({
   description: string;
   installs: number;
   isReactNative: boolean | null;
+  isActive: boolean;
+  onActivate: () => void;
 }) {
-  const [showDetails, setShowDetails] = useState(false);
   const [isReactNative, setIsReactNative] = useState<boolean | null>(
     fetchIsReactNative
   );
@@ -58,7 +61,7 @@ export function ListItem({
   const [error, setError] = useState<Error | null>(null);
 
   const handleClick = async () => {
-    setShowDetails((prev) => !prev);
+    onActivate()
 
     if (fetchIsReactNative !== null) {
       return;
@@ -131,14 +134,9 @@ export function ListItem({
   return (
     <li
       key={appId}
-      className={`rounded-lg shadow-md overflow-hidden flex flex-col transition-colors duration-200 ${
-        showDetails
-          ? "bg-gray-100 dark:bg-gray-800"
-          : "bg-white dark:bg-gray-800"
-      }`}
-      onClick={handleClick}
+      className={`rounded-lg shadow-md overflow-hidden flex flex-col transition-colors duration-200 bg-white dark:bg-gray-800`}
     >
-      <div className="flex items-center gap-4 p-4">
+      <div className="flex items-center gap-4 p-4" onClick={handleClick}>
         <Image
           alt={`${title} icon`}
           className="w-12 h-12 object-cover rounded-md"
@@ -170,8 +168,8 @@ export function ListItem({
           </p>
         </div>
       </div>
-      {showDetails && (
-        <div className="mt-4 p-4 border-t border-gray-400 dark:border-gray-700">
+      {isActive && (
+        <div className="mt-2 p-4 border-t border-gray-200 dark:border-gray-700">
           <p className="text-m text-gray-700 dark:text-gray-300 mb-2">
             <strong>App ID:</strong> {appId}
           </p>

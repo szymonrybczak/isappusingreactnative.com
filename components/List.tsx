@@ -5,12 +5,11 @@
  */
 
 import scraper from "google-play-scraper";
-import { ListItem } from "./ListItem";
 import { sql } from "@vercel/postgres";
-import { unstable_noStore as noStore } from 'next/cache';
-
+import { unstable_noStore as noStore } from "next/cache";
+import ListWrapper from "./ui/ListWrapper";
 export async function List({ term }: { term: string }) {
-  const apps = await scraper.search({ term, num: 3, fullDetail: true});
+  const apps = await scraper.search({ term, num: 3, fullDetail: true });
 
   const appIds = apps.map(({ appId }) => appId);
 
@@ -21,7 +20,7 @@ export async function List({ term }: { term: string }) {
     WHERE app_id IN (${appIds[0]}, ${appIds[1]}, ${appIds[2]})
   `;
 
-  const checkApps = query.rows.map(({ app_id, is_react_native }) => {
+  const checkedApps = query.rows.map(({ app_id, is_react_native }) => {
     return { id: app_id, isReactNative: is_react_native };
   });
 
@@ -47,27 +46,7 @@ export async function List({ term }: { term: string }) {
     );
   }
 
-  return (
-    <div className="w-full max-w-3xl px-4">
-      <ul className="grid grid-cols-1 gap-4">
-        {apps.map(({ appId, title, icon, scoreText, categories, url, developer, description, maxInstalls }) => (
-          <ListItem
-            key={appId}
-            appId={appId}
-            title={title}
-            icon={icon}
-            scoreText={scoreText}
-            developer={developer}
-            categories={categories}
-            url={url}
-            description={description}
-            installs={maxInstalls}
-            isReactNative={checkApps.find(({ id }) => id === appId)?.isReactNative ?? null} 
-          />
-        ))}
-      </ul>
-    </div>
-  );
+  return <ListWrapper apps={apps} checkedApps={checkedApps} />;
 }
 
 function FrownIcon(props: React.SVGProps<SVGSVGElement>) {

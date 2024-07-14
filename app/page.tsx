@@ -39,7 +39,6 @@ export default function Page({
       </h1>
       <Search />
       <Suspense fallback={Fallback} key={searchParams?.search}>
-      
         {searchParams?.search ? (
           <List term={searchParams?.search} />
         ) : (
