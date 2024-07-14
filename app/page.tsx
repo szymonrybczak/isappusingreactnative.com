@@ -67,7 +67,7 @@ export default function Page({
         <p className="text-gray-500 dark:text-gray-400">
           Created by{" "}
           <Link
-            href="https://twitter.com/szymonrybczak"
+            href="https://x.com/szymonrybczak"
             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 underline underline-offset-2"
           >
             Szymon Rybczak
