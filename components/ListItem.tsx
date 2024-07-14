@@ -31,7 +31,7 @@ export function ListItem({
   url,
   description,
   installs,
-  isReactNative: fetchIsReactNative
+  isReactNative: fetchIsReactNative,
 }: {
   appId: string;
   icon: string;
@@ -85,7 +85,7 @@ export function ListItem({
 
       const { link, size } = app;
 
-      setStatus(AnalyzeStatus.Downloading)
+      setStatus(AnalyzeStatus.Downloading);
       setAppSize(size);
 
       const { isTwoUnzipsRequired } = await downloadApp(link, appId);
@@ -175,6 +175,11 @@ export function ListItem({
           <p className="text-m text-gray-700 dark:text-gray-300 mb-2">
             <strong>App ID:</strong> {appId}
           </p>
+          {categories[0]?.name && (
+            <p className="text-m text-gray-700 dark:text-gray-300 mb-2">
+              <strong>Category:</strong> {categories[0].name}
+            </p>
+          )}
           <div className="flex flex-col">
             <div className="flex items-start text-l text-gray-700 dark:text-gray-300 mb-2">
               <strong className="mr-2">Technology:</strong>
