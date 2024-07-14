@@ -61,7 +61,7 @@ export function ListItem({
   const [error, setError] = useState<Error | null>(null);
 
   const handleClick = async () => {
-    onActivate()
+    onActivate();
 
     if (fetchIsReactNative !== null) {
       return;
@@ -170,7 +170,7 @@ export function ListItem({
       </div>
       {isActive && (
         <div className="mt-2 p-4 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-m text-gray-700 dark:text-gray-300 mb-2">
+          <p className="text-m text-gray-700 dark:text-gray-300 mb-2 whitespace-nowrap overflow-hidden text-overflow-ellipsis">
             <strong>App ID:</strong> {appId}
           </p>
           {categories[0]?.name && (
