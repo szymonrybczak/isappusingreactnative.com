@@ -176,28 +176,31 @@ export function ListItem({
             <strong>App ID:</strong> {appId}
           </p>
           <div className="flex flex-col">
-            <p className="flex items-center text-l text-gray-700 dark:text-gray-300 mb-2">
+            <div className="flex items-start text-l text-gray-700 dark:text-gray-300 mb-2">
               <strong className="mr-2">Technology:</strong>
-              {status === AnalyzeStatus.CheckingAppAvailability && "Checking app availability..."}
-              {status === AnalyzeStatus.Downloading && (
-                <>Downloading app binary... {appSize && `(${appSize} MB)`}</>
-              )}
-              {status === AnalyzeStatus.Unzipping && "Unzipping app..."}
-              {status === AnalyzeStatus.Analyzing && "Analyzing app code..."}
-              {status === AnalyzeStatus.Error && error && error.message}
-              {status === AnalyzeStatus.Success &&
-                isReactNative === null &&
-                "Unknown"}
-              {status === AnalyzeStatus.Success && isReactNative === true && (
-                <>
-                  <span>React Native</span>
-                  <ReactLogo className="ml-2" />
-                </>
-              )}
-              {status === AnalyzeStatus.Success &&
-                isReactNative === false &&
-                "Not React Native :("}
-            </p>
+              <div className="flex-1">
+                {status === AnalyzeStatus.CheckingAppAvailability &&
+                  "Checking app availability..."}
+                {status === AnalyzeStatus.Downloading && (
+                  <>Downloading app binary... {appSize && `(${appSize} MB)`}</>
+                )}
+                {status === AnalyzeStatus.Unzipping && "Unzipping app..."}
+                {status === AnalyzeStatus.Analyzing && "Analyzing app code..."}
+                {status === AnalyzeStatus.Error && error && error.message}
+                {status === AnalyzeStatus.Success &&
+                  isReactNative === null &&
+                  "Unknown"}
+                {status === AnalyzeStatus.Success && isReactNative === true && (
+                  <div className="flex items-center">
+                    <span>React Native</span>
+                    <ReactLogo className="ml-2" />
+                  </div>
+                )}
+                {status === AnalyzeStatus.Success &&
+                  isReactNative === false &&
+                  "Not React Native :("}
+              </div>
+            </div>
           </div>
         </div>
       )}
