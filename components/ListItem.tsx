@@ -10,6 +10,7 @@ import { AppDetails } from "@/types/AppDetails";
 import Image from "next/image";
 import { useState } from "react";
 import ReactLogo from "./icons/React";
+import Link from "next/link";
 
 enum AnalyzeStatus {
   Idle,
@@ -151,9 +152,11 @@ export function ListItem({
         />
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold text-gray-800 dark:text-gray-200">
-              {title}
-            </h3>
+            <Link href={url} target={'_blank'}>
+              <h3 className="text-base font-bold text-gray-800 dark:text-gray-200">
+                {title}
+              </h3>
+            </Link>
             {Number(scoreText) > 0 && (
               <div className="flex items-center gap-2">
                 <StarIcon className="w-4 h-4 fill-yellow-500" />
