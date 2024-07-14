@@ -1,11 +1,8 @@
 "use client";
 
-import checkApp from "@/actions/checkApp";
 import downloadApp from "@/actions/downloadApp";
 import getApp from "@/actions/getApp";
-import removeArtifacts from "@/actions/removeArtifacts";
 import saveResult from "@/actions/saveResult";
-import unzipApp from "@/actions/unzipApp";
 import { AppDetails } from "@/types/AppDetails";
 import Image from "next/image";
 import { useState } from "react";
@@ -92,13 +89,7 @@ export function ListItem({
       setStatus(AnalyzeStatus.Downloading);
       setAppSize(size);
 
-      const { isTwoUnzipsRequired } = await downloadApp(link, appId);
-
-      setStatus(AnalyzeStatus.Unzipping);
-      await unzipApp(appId, isTwoUnzipsRequired);
-
-      setStatus(AnalyzeStatus.Analyzing);
-      const result = await checkApp(title, appId);
+      const result = await downloadApp(link, appId);
 
       setIsReactNative(result.length > 0);
       setStatus(AnalyzeStatus.Success);
@@ -125,9 +116,7 @@ export function ListItem({
       }
 
       setStatus(AnalyzeStatus.Error);
-    } finally {
-      removeArtifacts(appId);
-    }
+    } 
 
     // FIXME add some fancy animation when app using React Native!
   };

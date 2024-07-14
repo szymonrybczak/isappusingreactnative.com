@@ -1,25 +1,23 @@
 "use server";
 
-import { getDownloadPath } from "./utils";
-import { pipeline } from "stream";
-import fs from "fs";
-import util from "util";
-import { dirname } from "path";
-
-const pipe = util.promisify(pipeline);
+import AdmZip from "adm-zip";
 
 const downloadApp = async (link: string, appId: string) => {
   const response = await fetch(link);
 
-  const downloadPath = getDownloadPath(appId);
-  fs.mkdirSync(dirname(downloadPath), { recursive: true });
+  const arrayBuffer = await response.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
 
-  // @ts-ignore
-  await pipe(response.body, fs.createWriteStream(downloadPath));
+  const zip = new AdmZip(buffer);
+  const entries = zip.getEntries();
 
-  return {
-    isTwoUnzipsRequired: link.toString().toLowerCase().includes("xapk"),
-  };
+  const patterns = [/react[-]?navigation/i, /react[^a-zA-Z]?native/i];
+
+  const matchedFiles = entries.filter(({entryName}) => 
+    patterns.some(pattern => pattern.test(entryName))
+  );
+
+  return matchedFiles.map(({entryName}) => entryName);
 };
 
 export default downloadApp;

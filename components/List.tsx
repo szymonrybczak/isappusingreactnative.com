@@ -8,6 +8,7 @@ import scraper from "google-play-scraper";
 import { sql } from "@vercel/postgres";
 import { unstable_noStore as noStore } from "next/cache";
 import ListWrapper from "./ui/ListWrapper";
+
 export async function List({ term }: { term: string }) {
   const apps = await scraper.search({ term, num: 3, fullDetail: true });
 
