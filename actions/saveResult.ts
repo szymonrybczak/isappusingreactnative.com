@@ -1,7 +1,12 @@
 "use server";
 
 import { AppDetails } from "@/types/AppDetails";
-import { sql } from "@vercel/postgres";
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 const saveResult = async (details: AppDetails, isReactNative: boolean) => {
   const {
@@ -19,29 +24,29 @@ const saveResult = async (details: AppDetails, isReactNative: boolean) => {
   const results = JSON.stringify(details.analyzeResult);
 
   try {
-    await sql`
-      INSERT INTO results
-      (app_id, url, icon, title, developer, score_text, description, installs, categories, is_react_native, date_added, analyze_results)
-      VALUES (${appId}, ${url}, ${icon}, ${title}, ${developer}, ${scoreText}, ${description}, ${installs}, ${categories[0].id}, ${isReactNative}, CURRENT_TIMESTAMP, ${results})
-      
-      ON CONFLICT (app_id)
-      DO UPDATE SET
-        url = EXCLUDED.url,
-        icon = EXCLUDED.icon,
-        title = EXCLUDED.title,
-        developer = EXCLUDED.developer,
-        score_text = EXCLUDED.score_text,
-        description = EXCLUDED.description,
-        installs = EXCLUDED.installs,
-        categories = EXCLUDED.categories,
-        is_react_native = EXCLUDED.is_react_native,
-        date_added = CURRENT_TIMESTAMP,
-        analyze_results = EXCLUDED.analyze_results;
-    `;
+    const { error } = await supabase
+      .from('results')
+      .upsert({
+        app_id: appId,
+        url,
+        icon,
+        title,
+        developer,
+        score_text: scoreText,
+        description,
+        installs,
+        categories: categories[0].id,
+        is_react_native: isReactNative,
+        date_added: new Date().toISOString(),
+        analyze_results: results
+      }, {
+        onConflict: 'app_id'
+      });
+
+    if (error) throw error;
   } catch (e) {
     console.error(e);
   }
-  
 };
 
 export default saveResult;
