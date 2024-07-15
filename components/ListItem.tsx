@@ -116,7 +116,7 @@ export function ListItem({
       }
 
       setStatus(AnalyzeStatus.Error);
-    } 
+    }
 
     // FIXME add some fancy animation when app using React Native!
   };
@@ -141,11 +141,9 @@ export function ListItem({
         />
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <Link href={url} target={'_blank'}>
-              <h3 className="text-base font-bold text-gray-800 dark:text-gray-200">
-                {title}
-              </h3>
-            </Link>
+            <h3 className="text-base font-bold text-gray-800 dark:text-gray-200">
+              {title}
+            </h3>
             {Number(scoreText) > 0 && (
               <div className="flex items-center gap-2">
                 <StarIcon className="w-4 h-4 fill-yellow-500" />
