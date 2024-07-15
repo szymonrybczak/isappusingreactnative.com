@@ -4,16 +4,20 @@ import AdmZip from "adm-zip";
 
 const checkApp = (entries: AdmZip.IZipEntry[]) => {
   const patterns = [/react[-]?navigation/i, /react[^a-zA-Z]?native/i];
-
+  console.debug('----checkApp----');
+  console.debug(JSON.stringify(entries.map(({ entryName }) => entryName)));
   const matchedFiles = entries.filter(({ entryName }) =>
     patterns.some((pattern) => pattern.test(entryName))
   );
-
+  console.debug('----matchedFiles----');
+  console.debug(JSON.stringify(matchedFiles.map(({ entryName }) => entryName)));
+  
   return matchedFiles.map(({ entryName }) => entryName);
 };
 
-const downloadApp = async (link: string, appId: string) => {
+const downloadApp = async (link: string) => {
   try {
+    console.debug('----downloadApp----', link);
     const response = await fetch(link);
 
     const arrayBuffer = await response.arrayBuffer();

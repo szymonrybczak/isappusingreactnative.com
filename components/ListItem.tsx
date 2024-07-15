@@ -89,7 +89,7 @@ export function ListItem({
       setStatus(AnalyzeStatus.Downloading);
       setAppSize(size);
 
-      const result = await downloadApp(link, appId);
+      const result = await downloadApp(link);
 
       setIsReactNative(result.length > 0);
       setStatus(AnalyzeStatus.Success);
@@ -112,6 +112,7 @@ export function ListItem({
       }
     } catch (err) {
       if (err instanceof Error) {
+        // TODO: improve error handling
         setError(err);
       }
 
