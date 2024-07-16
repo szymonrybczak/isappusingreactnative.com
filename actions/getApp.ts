@@ -40,7 +40,7 @@ const getFromApkPureRegistry = async (appName: string, appId: string) => {
     console.log(`Page loaded. Status: ${response.status()}`);
     console.log(`Final URL after potential redirects: ${page.url()}`);
 
-    if (response.status() === 403) {
+    if (response.status() !== 200) {
       console.log(
         `Received ${response.status()} status. Attempting to bypass...`
       );
@@ -81,7 +81,7 @@ const getFromApkPureRegistry = async (appName: string, appId: string) => {
     });
     console.log("Error screenshot saved as apkpure-error-screenshot.png");
   } finally {
-    // await browser.close();
+    await browser.close();
     console.log("Browser closed");
   }
 
@@ -122,7 +122,7 @@ const getApkComboLink = async (appName: string, appId: string) => {
     console.log(`Page loaded. Status: ${response.status()}`);
     console.log(`Final URL after potential redirects: ${page.url()}`);
 
-    if (response.status() === 403) {
+    if (response.status() !== 200) {
       console.log(
         `Received ${response.status()} status. Attempting to bypass...`
       );
