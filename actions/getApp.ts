@@ -3,6 +3,8 @@
 
 import puppeteer from "puppeteer";
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const bytesToMegabytes = (bytes: number, decimals = 2) => {
   return (bytes / (1024 * 1024)).toFixed(decimals);
 };
@@ -38,9 +40,11 @@ const getFromApkPureRegistry = async (appName: string, appId: string) => {
     console.log(`Page loaded. Status: ${response.status()}`);
     console.log(`Final URL after potential redirects: ${page.url()}`);
 
-    if (response.status() !== 200) {
-      console.log(`Received ${response.status()} status. Attempting to bypass...`);
-      await page.waitForTimeout(5000);
+    if (response.status() === 403) {
+      console.log(
+        `Received ${response.status()} status. Attempting to bypass...`
+      );
+      await sleep(5000);
       await page.reload({ waitUntil: "networkidle0" });
       console.log(
         `Page reloaded. New status: ${(await page.reload()).status()}`
@@ -77,7 +81,7 @@ const getFromApkPureRegistry = async (appName: string, appId: string) => {
     });
     console.log("Error screenshot saved as apkpure-error-screenshot.png");
   } finally {
-    await browser.close();
+    // await browser.close();
     console.log("Browser closed");
   }
 
@@ -118,10 +122,13 @@ const getApkComboLink = async (appName: string, appId: string) => {
     console.log(`Page loaded. Status: ${response.status()}`);
     console.log(`Final URL after potential redirects: ${page.url()}`);
 
-    if (response.status() !== 200) {
-      console.log(`Received ${response.status()} status. Attempting to bypass...`);
+    if (response.status() === 403) {
+      console.log(
+        `Received ${response.status()} status. Attempting to bypass...`
+      );
       // Wait for a bit and try to interact with the page
-      await page.waitForTimeout(5000);
+
+      await sleep(5000);
       await page.reload({ waitUntil: "networkidle0" });
       console.log(
         `Page reloaded. New status: ${(await page.reload()).status()}`
@@ -181,6 +188,7 @@ const getLink = async (appName: string, appId: string) => {
 
 const getApp = async (appName: string, appId: string) => {
   const link = await getLink(appName, appId);
+  console.log({ link });
 
   if (!link) {
     return null;
@@ -190,13 +198,14 @@ const getApp = async (appName: string, appId: string) => {
 
   const size = response.headers.get("content-length");
 
-  if (!response.ok || !size) {
+  if (!response.ok) {
+    console.log("Error occurred while fetching the app", size);
     return null;
   }
 
   return {
     link,
-    size: bytesToMegabytes(parseInt(size, 10)),
+    size: size && bytesToMegabytes(parseInt(size, 10)),
   };
 };
 

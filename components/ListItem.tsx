@@ -68,6 +68,7 @@ export function ListItem({
     try {
       setStatus(AnalyzeStatus.CheckingAppAvailability);
       const app = await getApp(title, appId);
+      console.log({ app });
 
       if (!app) {
         const financeAppError = categories[0].id === "FINANCE";
@@ -180,7 +181,17 @@ export function ListItem({
                 )}
                 {status === AnalyzeStatus.Unzipping && "Unzipping app..."}
                 {status === AnalyzeStatus.Analyzing && "Analyzing app code..."}
-                {status === AnalyzeStatus.Error && error && error.message}
+                {status === AnalyzeStatus.Error && error && (
+                  <>
+                    {error.message}
+                    <button
+                      className="text-blue-500 underline mx-3"
+                      onClick={handleClick}
+                    >
+                      Try again
+                    </button>
+                  </>
+                )}
                 {status === AnalyzeStatus.Success &&
                   isReactNative === null &&
                   "Unknown"}
