@@ -4,8 +4,6 @@ import AdmZip from "adm-zip";
 
 const checkApp = (entries: AdmZip.IZipEntry[]) => {
   const patterns = [/react[-]?navigation/i, /react[^a-zA-Z]?native/i];
-  console.debug('----checkApp----');
-  console.debug(JSON.stringify(entries.map(({ entryName }) => entryName)));
   const matchedFiles = entries.filter(({ entryName }) =>
     patterns.some((pattern) => pattern.test(entryName))
   );

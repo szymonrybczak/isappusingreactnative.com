@@ -19,13 +19,13 @@ export async function List({ term }: { term: string }) {
 
   const appIds = apps.map(({ appId }) => appId);
 
-  noStore();
-  const { data } = await supabase
-    .from("results")
-    .select("is_react_native, app_id")
-    .in("app_id", appIds);
+  // noStore();
+  // const { data } = await supabase
+  //   .from("results")
+  //   .select("is_react_native, app_id")
+  //   .in("app_id", appIds);
 
-  const checkedApps = (data ?? []).map(({ app_id, is_react_native }) => {
+  const checkedApps = [].map(({ app_id, is_react_native }) => {
     return { id: app_id, isReactNative: is_react_native };
   });
 

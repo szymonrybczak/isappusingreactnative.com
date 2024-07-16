@@ -19,6 +19,7 @@
     "google-play-scraper": "10.0.0",
     "lucide-react": "0.390.0",
     "next": "14.2.3",
+    "puppeteer": "^22.13.0",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "2.3.0",
