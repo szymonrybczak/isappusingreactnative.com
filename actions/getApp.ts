@@ -10,14 +10,14 @@ const bytesToMegabytes = (bytes: number, decimals = 2) => {
 };
 
 const getFromApkPureRegistry = async (appName: string, appId: string) => {
-  console.log("Starting headless browser...");
-  const browser = await puppeteer.launch({
-    headless: "new",
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
-  const page = await browser.newPage();
-
   try {
+    console.log("Starting headless browser...");
+    const browser = await puppeteer.launch({
+      headless: "new", // Use the new headless mode
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+    const page = await browser.newPage();
+
     // Set a user agent to mimic a real browser
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
@@ -90,13 +90,13 @@ const getFromApkPureRegistry = async (appName: string, appId: string) => {
 
 const getApkComboLink = async (appName: string, appId: string) => {
   console.log("Starting headless browser...");
-  const browser = await puppeteer.launch({
-    headless: "new", // Use the new headless mode
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
-  const page = await browser.newPage();
-
   try {
+    const browser = await puppeteer.launch({
+      headless: "new", // Use the new headless mode
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+    const page = await browser.newPage();
+
     // Set a user agent to mimic a real browser
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
@@ -172,13 +172,13 @@ const getLink = async (appName: string, appId: string) => {
     // Make parallel requests to both sources
     const result = await Promise.race([
       getApkComboLink(appName, appId),
-      getFromApkPureRegistry(appName, appId)
+      getFromApkPureRegistry(appName, appId),
     ]);
 
     if (!result) {
       const [apkComboResult, apkPureResult] = await Promise.all([
         getApkComboLink(appName, appId),
-        getFromApkPureRegistry(appName, appId)
+        getFromApkPureRegistry(appName, appId),
       ]);
 
       return apkComboResult || apkPureResult || null;
