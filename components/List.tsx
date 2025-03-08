@@ -5,14 +5,14 @@
  */
 
 import scraper from "google-play-scraper";
-import { createClient } from "@supabase/supabase-js";
+// import { createClient } from "@supabase/supabase-js";
 import { unstable_noStore as noStore } from "next/cache";
 import ListWrapper from "./ui/ListWrapper";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// const supabase = createClient(
+//   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+//   process.env.SUPABASE_SERVICE_ROLE_KEY!
+// );
 
 export async function List({ term }: { term: string }) {
   const apps = await scraper.search({ term, num: 3, fullDetail: true });
