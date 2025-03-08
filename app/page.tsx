@@ -4,7 +4,7 @@ import { Search } from "@/components/search";
 import Link from "next/link";
 import { Suspense } from "react";
 
-export const maxDuration = 180;
+export const maxDuration = 60;
 
 const Fallback = (
   <div className="w-full max-w-3xl px-4">
