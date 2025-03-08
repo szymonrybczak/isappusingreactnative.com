@@ -15,8 +15,8 @@ importers:
         specifier: ^2.44.4
         version: 2.44.4
       adm-zip:
-        specifier: ^0.5.14
-        version: 0.5.14
+        specifier: ^0.5.16
+        version: 0.5.16
       cheerio:
         specifier: 1.0.0-rc.12
         version: 1.0.0-rc.12
@@ -371,8 +371,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  adm-zip@0.5.14:
-    resolution: {integrity: sha512-DnyqqifT4Jrcvb8USYjp6FHtBpEIz1mnXu6pTRHZ0RL69LbQYiO+0lDFg5+OKA7U29oWSs3a/i8fhn8ZcceIWg==}
+  adm-zip@0.5.16:
+    resolution: {integrity: sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==}
     engines: {node: '>=12.0'}
 
   agent-base@7.1.1:
@@ -2480,7 +2480,7 @@ snapshots:
 
   acorn@8.12.1: {}
 
-  adm-zip@0.5.14: {}
+  adm-zip@0.5.16: {}
 
   agent-base@7.1.1:
     dependencies:
