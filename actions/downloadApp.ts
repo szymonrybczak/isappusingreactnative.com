@@ -24,7 +24,7 @@ const downloadApp = async (link: string) => {
     const zip = new AdmZip(buffer);
     const entries = zip.getEntries();
 
-    if (link.includes("XAPK")) {
+    if (link.toLowerCase().includes("xapk")) {
       const xapkEntries = entries.filter(({ entryName }) =>
         entryName.endsWith(".apk")
       );

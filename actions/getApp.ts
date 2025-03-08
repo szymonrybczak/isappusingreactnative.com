@@ -116,7 +116,7 @@ const getApkComboLink = async (appName: string, appId: string) => {
 
     const response = await page.goto(url, {
       waitUntil: "networkidle0",
-      timeout: 60000, // Increase timeout to 60 seconds
+      timeout: 10000, // Increase timeout to 60 seconds
     });
 
     console.log(`Page loaded. Status: ${response.status()}`);
@@ -128,7 +128,7 @@ const getApkComboLink = async (appName: string, appId: string) => {
       );
       // Wait for a bit and try to interact with the page
 
-      await sleep(5000);
+      await sleep(2000);
       await page.reload({ waitUntil: "networkidle0" });
       console.log(
         `Page reloaded. New status: ${(await page.reload()).status()}`
@@ -136,7 +136,7 @@ const getApkComboLink = async (appName: string, appId: string) => {
     }
 
     console.log("Waiting for selector: #best-variant-tab a");
-    await page.waitForSelector("#best-variant-tab a", { timeout: 30000 });
+    await page.waitForSelector("#best-variant-tab a", { timeout: 5000 });
     console.log("Selector found");
 
     const links = await page.evaluate(() => {
@@ -169,18 +169,22 @@ const getApkComboLink = async (appName: string, appId: string) => {
 
 const getLink = async (appName: string, appId: string) => {
   try {
-    let link = await getApkComboLink(appName, appId);
+    // Make parallel requests to both sources
+    const result = await Promise.race([
+      getApkComboLink(appName, appId),
+      getFromApkPureRegistry(appName, appId)
+    ]);
 
-    if (!link) {
-      // Sometimes apkcombo doesn't present the app at first load, so we need to make a separate request
-      link = await getApkComboLink(appName, appId);
+    if (!result) {
+      const [apkComboResult, apkPureResult] = await Promise.all([
+        getApkComboLink(appName, appId),
+        getFromApkPureRegistry(appName, appId)
+      ]);
 
-      if (!link) {
-        return await getFromApkPureRegistry(appName, appId);
-      }
+      return apkComboResult || apkPureResult || null;
     }
 
-    return link;
+    return result;
   } catch {
     return null;
   }

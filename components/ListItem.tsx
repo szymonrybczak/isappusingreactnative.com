@@ -67,10 +67,7 @@ export function ListItem({
 
     try {
       setStatus(AnalyzeStatus.CheckingAppAvailability);
-      const app = await getApp(title, appId);
-      console.log({ app });
 
-      if (!app) {
         const financeAppError = categories[0].id === "FINANCE";
 
         let errorMessage =
@@ -80,8 +77,12 @@ export function ListItem({
           errorMessage =
             "Finance App Warning: This app is not supported in our registry. " +
             "Due to security concerns, not all finance apps are included :(";
+          throw new Error(errorMessage);
         }
 
+      const app = await getApp(title, appId);
+
+      if (!app) {
         throw new Error(errorMessage);
       }
 
