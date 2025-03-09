@@ -4,12 +4,6 @@
 import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-core";
 
-const executablePath =
-  process.env.CHROME_EXECUTABLE_PATH ||
-  (process.env.NODE_ENV === "development"
-    ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" // Mac OS path
-    : await chromium.executablePath());
-
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const bytesToMegabytes = (bytes: number, decimals = 2) => {
@@ -21,7 +15,7 @@ const getFromApkPureRegistry = async (appName: string, appId: string) => {
   const browser = await puppeteer.launch({
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
-    executablePath: executablePath,
+    executablePath: await chromium.executablePath(),
     headless: chromium.headless,
     ignoreHTTPSErrors: true,
   });
@@ -104,7 +98,7 @@ const getApkComboLink = async (appName: string, appId: string) => {
   const browser = await puppeteer.launch({
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
-    executablePath: executablePath,
+    executablePath: await chromium.executablePath(),
     headless: chromium.headless,
     ignoreHTTPSErrors: true,
   });
