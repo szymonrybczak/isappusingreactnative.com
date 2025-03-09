@@ -1,7 +1,14 @@
 // @ts-nocheck
 "use server";
 
-import puppeteer from "puppeteer";
+import chromium from "@sparticuz/chromium";
+import puppeteer from "puppeteer-core";
+
+const executablePath =
+  process.env.CHROME_EXECUTABLE_PATH ||
+  (process.env.NODE_ENV === "development"
+    ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" // Mac OS path
+    : await chromium.executablePath());
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -12,8 +19,11 @@ const bytesToMegabytes = (bytes: number, decimals = 2) => {
 const getFromApkPureRegistry = async (appName: string, appId: string) => {
   console.log("Starting headless browser...");
   const browser = await puppeteer.launch({
-    headless: "new", // Use the new headless mode
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: executablePath,
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true,
   });
 
   try {
@@ -92,8 +102,11 @@ const getFromApkPureRegistry = async (appName: string, appId: string) => {
 const getApkComboLink = async (appName: string, appId: string) => {
   console.log("Starting headless browser...");
   const browser = await puppeteer.launch({
-    headless: "new", // Use the new headless mode
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: executablePath,
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true,
   });
 
   try {
