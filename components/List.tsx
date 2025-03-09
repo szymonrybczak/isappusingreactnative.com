@@ -5,29 +5,31 @@
  */
 
 import scraper from "google-play-scraper";
-// import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 import { unstable_noStore as noStore } from "next/cache";
 import ListWrapper from "./ui/ListWrapper";
 
-// const supabase = createClient(
-//   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-//   process.env.SUPABASE_SERVICE_ROLE_KEY!
-// );
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function List({ term }: { term: string }) {
   const apps = await scraper.search({ term, num: 3, fullDetail: true });
 
   const appIds = apps.map(({ appId }) => appId);
 
-  // noStore();
-  // const { data } = await supabase
-  //   .from("results")
-  //   .select("is_react_native, app_id")
-  //   .in("app_id", appIds);
+  noStore();
+  const { data } = await supabase
+    .from("results")
+    .select("is_react_native, app_id")
+    .in("app_id", appIds);
 
-  const checkedApps = [].map(({ app_id, is_react_native }) => {
-    return { id: app_id, isReactNative: is_react_native };
-  });
+  const checkedApps = data
+    ? data.map(({ app_id, is_react_native }) => {
+        return { id: app_id, isReactNative: is_react_native };
+      })
+    : [];
 
   if (!apps.length) {
     return (

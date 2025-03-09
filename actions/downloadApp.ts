@@ -7,15 +7,20 @@ const checkApp = (entries: AdmZip.IZipEntry[]) => {
   const matchedFiles = entries.filter(({ entryName }) =>
     patterns.some((pattern) => pattern.test(entryName))
   );
-  console.debug('----matchedFiles----');
+  console.debug("----matchedFiles----");
   console.debug(JSON.stringify(matchedFiles.map(({ entryName }) => entryName)));
-  
+
   return matchedFiles.map(({ entryName }) => entryName);
 };
 
-const downloadApp = async (link: string) => {
+const downloadApp = async (
+  link: string
+): Promise<{
+  analyzedFiles: string[];
+  allFiles: string[];
+}> => {
   try {
-    console.debug('----downloadApp----', link);
+    console.debug("----downloadApp----", link);
     const response = await fetch(link);
 
     const arrayBuffer = await response.arrayBuffer();
@@ -40,16 +45,25 @@ const downloadApp = async (link: string) => {
             const result = checkApp(entries);
 
             if (result.length > 0) {
-              return result;
+              return {
+                analyzedFiles: result,
+                allFiles: entries.map(({ entryName }) => entryName),
+              };
             }
           }
         }
       }
     }
 
-    return checkApp(entries);
+    return {
+      analyzedFiles: checkApp(entries),
+      allFiles: entries.map(({ entryName }) => entryName),
+    };
   } catch (error) {
-    return [];
+    return {
+      analyzedFiles: [],
+      allFiles: [],
+    };
   }
 };
 

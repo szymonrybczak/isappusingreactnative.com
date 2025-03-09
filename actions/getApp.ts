@@ -10,12 +10,13 @@ const bytesToMegabytes = (bytes: number, decimals = 2) => {
 };
 
 const getFromApkPureRegistry = async (appName: string, appId: string) => {
+  console.log("Starting headless browser...");
+  const browser = await puppeteer.launch({
+    headless: "new", // Use the new headless mode
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+
   try {
-    console.log("Starting headless browser...");
-    const browser = await puppeteer.launch({
-      headless: "new", // Use the new headless mode
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
     const page = await browser.newPage();
 
     // Set a user agent to mimic a real browser
@@ -90,11 +91,12 @@ const getFromApkPureRegistry = async (appName: string, appId: string) => {
 
 const getApkComboLink = async (appName: string, appId: string) => {
   console.log("Starting headless browser...");
+  const browser = await puppeteer.launch({
+    headless: "new", // Use the new headless mode
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+
   try {
-    const browser = await puppeteer.launch({
-      headless: "new", // Use the new headless mode
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
     const page = await browser.newPage();
 
     // Set a user agent to mimic a real browser
@@ -170,6 +172,7 @@ const getApkComboLink = async (appName: string, appId: string) => {
 const getLink = async (appName: string, appId: string) => {
   try {
     // Make parallel requests to both sources
+    console.log("Getting link for", appName, appId);
     const result = await Promise.race([
       getApkComboLink(appName, appId),
       getFromApkPureRegistry(appName, appId),
@@ -185,7 +188,8 @@ const getLink = async (appName: string, appId: string) => {
     }
 
     return result;
-  } catch {
+  } catch (e) {
+    console.log(e);
     return null;
   }
 };

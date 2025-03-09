@@ -68,19 +68,20 @@ export function ListItem({
     try {
       setStatus(AnalyzeStatus.CheckingAppAvailability);
 
-        const financeAppError = categories[0].id === "FINANCE";
+      const financeAppError = categories[0].id === "FINANCE";
 
-        let errorMessage =
-          "An error occurred while downloading the app, probably the app is not available in the registry 😢";
+      let errorMessage =
+        "An error occurred while downloading the app, probably the app is not available in the registry 😢";
 
-        if (financeAppError) {
-          errorMessage =
-            "Finance App Warning: This app is not supported in our registry. " +
-            "Due to security concerns, not all finance apps are included :(";
-          throw new Error(errorMessage);
-        }
+      if (financeAppError) {
+        errorMessage =
+          "Finance App Warning: This app is not supported in our registry. " +
+          "Due to security concerns, not all finance apps are included :(";
+        throw new Error(errorMessage);
+      }
 
       const app = await getApp(title, appId);
+      console.log("app", app);
 
       if (!app) {
         throw new Error(errorMessage);
@@ -91,9 +92,9 @@ export function ListItem({
       setStatus(AnalyzeStatus.Downloading);
       setAppSize(size);
 
-      const result = await downloadApp(link);
+      const { analyzedFiles, allFiles } = await downloadApp(link);
 
-      setIsReactNative(result.length > 0);
+      setIsReactNative(analyzedFiles.length > 0);
       setStatus(AnalyzeStatus.Success);
 
       const data: AppDetails = {
@@ -106,12 +107,11 @@ export function ListItem({
         description,
         installs,
         categories,
-        analyzeResult: result,
+        analyzedFiles,
+        allFiles,
       };
 
-      if (result) {
-        await saveResult(data, result.length > 0);
-      }
+      await saveResult(data, analyzedFiles.length > 0);
     } catch (err) {
       if (err instanceof Error) {
         // TODO: improve error handling

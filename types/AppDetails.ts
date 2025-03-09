@@ -8,8 +8,9 @@ export type AppDetails = {
   description: string;
   installs: number;
   categories: Array<{
-    name: string
-    id: string|null
-  }>
-  analyzeResult: string[]
+    name: string;
+    id: string | null;
+  }>;
+  analyzedFiles: string[];
+  allFiles: string[];
 };
