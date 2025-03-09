@@ -4,7 +4,7 @@ import { Search } from "@/components/search";
 import Link from "next/link";
 import { Suspense } from "react";
 
-export const maxDuration = 180;
+export const maxDuration = 60;
 
 const Fallback = (
   <div className="w-full max-w-3xl px-4">
@@ -54,13 +54,12 @@ export default function Page({
                 Have you ever wondered if an app is using React Native?
               </h3>
               <p className="mt-2 text-gray-600 dark:text-gray-400 text-center text-s">
-                You can search for any app to find out if it{"'"}s using React Native.
+                You can search for any app to find out if it{"'"}s using React
+                Native.
               </p>
             </div>
           </div>
-
         )}
-
       </Suspense>
 
       <div className="flex items-center justify-between w-full max-w-3xl px-4 mt-6">
