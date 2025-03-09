@@ -32,6 +32,7 @@ export async function List({ term }: { term: string }) {
   if (!apps.length) {
     return (
       <div className="w-full max-w-3xl px-4">
+        <div>trigger deploy</div>
         <ul className="grid grid-cols-1 gap-4" />
         <div
           className={`bg-white rounded-lg shadow-md dark:bg-gray-800 p-8 flex flex-col items-center justify-center ${
